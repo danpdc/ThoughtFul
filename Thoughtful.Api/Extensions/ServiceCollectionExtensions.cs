@@ -8,7 +8,14 @@ namespace Thoughtful.Api.Extensions
             WebApplicationBuilder builder)
         {
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c => 
+            {
+                c.SwaggerDoc("v1", new() { Title = builder.Environment.ApplicationName, Version="v1"});
+                c.TagActionsBy(ta =>
+                {
+                    return new List<string> { ta.ActionDescriptor.DisplayName! };
+                });
+            });
             builder.Services.AddDbContext<ThoughtfulDbContext>(opt =>
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
             builder.Services.AddMediatR(typeof(Program));

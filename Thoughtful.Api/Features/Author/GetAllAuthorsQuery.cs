@@ -2,7 +2,7 @@
 
 namespace Thoughtful.Api.Features.AuthorFeature
 {
-    public class GetAllAuthorsQuery : IRequest<List<Author>>
+    public class GetAllAuthorsQuery : IRequest<List<AuthorGetDto>>
     {
     }
 }

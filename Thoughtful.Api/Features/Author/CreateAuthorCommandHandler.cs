@@ -3,7 +3,7 @@ using Thoughtful.Domain.Model;
 
 namespace Thoughtful.Api.Features.AuthorFeature
 {
-    public class CreateAuthorCommandHandler : IRequestHandler<CreateAuthorCommand, Author>
+    public class CreateAuthorCommandHandler : IRequestHandler<CreateAuthorCommand, AuthorGetDto>
     {
         private readonly ThoughtfulDbContext _ctx;
         private readonly IMapper _mapper;
@@ -13,12 +13,12 @@ namespace Thoughtful.Api.Features.AuthorFeature
             _mapper = mapper;
         }
 
-        public async Task<Author> Handle(CreateAuthorCommand request, CancellationToken cancellationToken)
+        public async Task<AuthorGetDto> Handle(CreateAuthorCommand request, CancellationToken cancellationToken)
         {
             var toAdd = _mapper.Map<Author>(request.Author);
             _ctx.Authors.Add(toAdd);
             await _ctx.SaveChangesAsync();
-            return toAdd;
+            return _mapper.Map<AuthorGetDto>(toAdd);
         }
     }
 }

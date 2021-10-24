@@ -16,11 +16,18 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Thoughtful.Dal\Thoughtful.Dal.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Blogs\AutoMapperProfiles\" />
+    <Folder Include="Features\Blogs\Commands\" />
+    <Folder Include="Features\Blogs\Handlers\" />
+    <Folder Include="Features\Blogs\Queries\" />
   </ItemGroup>
 
 </Project>

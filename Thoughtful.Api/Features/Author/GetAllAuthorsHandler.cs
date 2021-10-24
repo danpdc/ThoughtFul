@@ -3,16 +3,19 @@ using Thoughtful.Domain.Model;
 
 namespace Thoughtful.Api.Features.AuthorFeature
 {
-    public class GetAllAuthorsHandler : IRequestHandler<GetAllAuthorsQuery, List<Author>>
+    public class GetAllAuthorsHandler : IRequestHandler<GetAllAuthorsQuery, List<AuthorGetDto>>
     {
         private readonly ThoughtfulDbContext _ctx;
-        public GetAllAuthorsHandler(ThoughtfulDbContext ctx)
+        private readonly IMapper _mapper;
+        public GetAllAuthorsHandler(ThoughtfulDbContext ctx, IMapper mapper)
         {
             _ctx = ctx;
+            _mapper = mapper;
         }
-        public async Task<List<Author>> Handle(GetAllAuthorsQuery request, CancellationToken cancellationToken)
+        public async Task<List<AuthorGetDto>> Handle(GetAllAuthorsQuery request, CancellationToken cancellationToken)
         {
-            return await _ctx.Authors.ToListAsync();
+            var authors = await _ctx.Authors.ToListAsync();
+            return _mapper.Map<List<AuthorGetDto>>(authors);
         }
     }
 }
