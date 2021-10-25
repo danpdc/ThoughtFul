@@ -23,11 +23,4 @@
     <ProjectReference Include="..\Thoughtful.Dal\Thoughtful.Dal.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Blogs\AutoMapperProfiles\" />
-    <Folder Include="Features\Blogs\Commands\" />
-    <Folder Include="Features\Blogs\Handlers\" />
-    <Folder Include="Features\Blogs\Queries\" />
-  </ItemGroup>
-
 </Project>

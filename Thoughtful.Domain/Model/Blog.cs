@@ -29,6 +29,7 @@ namespace Thoughtful.Domain.Model
                 Name = name,
                 Description = description,
                 AuthorId = authorId,
+                CreatedDate = DateTime.Now
             };
         }
 
@@ -38,9 +39,15 @@ namespace Thoughtful.Domain.Model
             Description = description;
         }
 
+        public void SetOwner(Author author)
+        {
+            Owner = author;
+        }
+
         public void AddContributor(Author author)
         {
-            Contributors.Add(author);
+            if (author.Id == AuthorId)
+                Contributors.Add(author);
         }
 
         public void RemoveContributor(Author author)

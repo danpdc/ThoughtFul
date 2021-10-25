@@ -8,8 +8,8 @@ namespace Thoughtful.Api.Features.Blogs
         private IMapper _mapper;
         public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            new BlogCommonEndpoint(_mediator, _mapper).RegisterRoutes(endpoints);
-            new BlogContributorsEndpoint(_mediator, _mapper);
+            new BlogReadsEndpoint(_mediator).RegisterRoutes(endpoints);
+            new BlogsWritesEndpoint(_mediator).RegisterRoutes(endpoints);
             return endpoints;
         }
 
