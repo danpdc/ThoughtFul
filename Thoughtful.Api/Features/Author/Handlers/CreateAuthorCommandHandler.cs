@@ -15,7 +15,7 @@ namespace Thoughtful.Api.Features.AuthorFeature
 
         public async Task<AuthorGetDto> Handle(CreateAuthorCommand request, CancellationToken cancellationToken)
         {
-            var toAdd = _mapper.Map<Author>(request.Author);
+            var toAdd = _mapper.Map<Thoughtful.Domain.Model.Author>(request.Author);
             _ctx.Authors.Add(toAdd);
             await _ctx.SaveChangesAsync();
             return _mapper.Map<AuthorGetDto>(toAdd);

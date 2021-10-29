@@ -46,7 +46,7 @@ namespace Thoughtful.Domain.Model
 
         public void AddContributor(Author author)
         {
-            if (author.Id == AuthorId)
+            if (!(Contributors.Any(c => c.Id == author.Id)))
                 Contributors.Add(author);
         }
 

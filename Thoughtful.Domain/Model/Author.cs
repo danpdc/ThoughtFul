@@ -18,5 +18,13 @@ namespace Thoughtful.Domain.Model
         public string? FullName => FirstName + " " + LastName;
         public DateTime DateOfBirth { get; set; }
         public string? Bio { get; set; }
+
+        public void UpdateAuthor(string firstName, string lastName, string bio, DateTime dateOfBirth)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Bio = bio;
+            DateOfBirth = dateOfBirth;
+        }
     }
 }

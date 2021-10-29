@@ -1,7 +1,9 @@
-﻿using Thoughtful.Dal;
+﻿using Thoughtful.Api.Features.AuthorFeature;
+using Thoughtful.Api.Features.Author.Queries;
+using Thoughtful.Dal;
 using Thoughtful.Domain.Model;
 
-namespace Thoughtful.Api.Features.AuthorFeature
+namespace Thoughtful.Api.Features.Author.Handlers
 {
     public class GetAllAuthorsHandler : IRequestHandler<GetAllAuthorsQuery, List<AuthorGetDto>>
     {

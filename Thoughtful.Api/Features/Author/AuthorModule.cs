@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Thoughtful.Api.Features.Author.Commands;
+using Thoughtful.Api.Features.Author.Queries;
 using Thoughtful.Dal;
 using Thoughtful.Domain.Model;
 
@@ -22,6 +24,26 @@ namespace Thoughtful.Api.Features.AuthorFeature
                 .WithDisplayName("Authors")
                 .WithTags("Authors")
                 .Produces<AuthorGetDto>()
+                .Produces(500);
+
+            endpoints.MapGet("api/authors/{id}", async (int id) => await GetAuthorById(id))
+                .WithName("GetAuthorById")
+                .WithDisplayName("Authors")
+                .Produces<AuthorGetDto>()
+                .Produces(404)
+                .Produces(500);
+
+            endpoints.MapPut("api/authors/{id}", async (int id, AuthorDto authorToUpdate) 
+                => await UpdateAuthor(id, authorToUpdate))
+                .WithName("UpdateAuthor")
+                .WithDisplayName("Authors")
+                .Produces(204)
+                .Produces(500);
+
+            endpoints.MapDelete("api/authors/{id}", async (int id) => await DeleteAuthor(id))
+                .WithName("DeleteAuthor")
+                .WithDisplayName("Authors")
+                .Produces(204)
                 .Produces(500);
 
             return endpoints;
@@ -55,6 +77,36 @@ namespace Thoughtful.Api.Features.AuthorFeature
             var command = new CreateAuthorCommand { Author = authorDto };
             var result = await _mediator.Send(command);
             return Results.Ok(result);
+        }
+
+        private async Task<IResult> GetAuthorById(int id)
+        {
+            var result = await _mediator.Send(new GetAuthorById { AuthorId = id});
+            if (result is null)
+                return Results.NotFound();
+
+            return Results.Ok(result);
+        }
+
+        private async Task<IResult> UpdateAuthor(int id, AuthorDto authorToUpdate)
+        {
+            var command = new UpdateAuthor
+            {
+                AuthorId = id,
+                FirstName = authorToUpdate.FirstName,
+                LastName = authorToUpdate.LastName,
+                Bio = authorToUpdate.Bio,
+                DateOfBirth = authorToUpdate.DateOfBirth
+            };
+            await _mediator.Send(command);
+
+            return Results.NoContent();
+        }
+
+        private async Task<IResult> DeleteAuthor(int id)
+        {
+            await _mediator.Send(new DeleteAuthor { AuthorId = id});
+            return Results.NoContent();
         }
     }
 }

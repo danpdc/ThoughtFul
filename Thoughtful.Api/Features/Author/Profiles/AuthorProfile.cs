@@ -7,8 +7,8 @@ namespace Thoughtful.Api.Features.AuthorFeature
     {
         public AuthorProfile()
         {
-            CreateMap<AuthorDto, Author>().ReverseMap();
-            CreateMap<Author, AuthorGetDto>()
+            CreateMap<AuthorDto, Thoughtful.Domain.Model.Author>().ReverseMap();
+            CreateMap<Thoughtful.Domain.Model.Author, AuthorGetDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FullName));
         }
     }
