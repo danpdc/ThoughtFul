@@ -16,7 +16,7 @@ namespace Thoughtful.Api.Features.Blogs.Endpoints
             endpoints.MapPost("/api/blogs", async (BlogCreate dto) => await CreateBlog(dto))
                 .WithName("Createblog")
                 .WithDisplayName("Blogs")
-                .Produces<BlogCreate>()
+                .Produces<BlogCreate>(201)
                 .Produces(500);
 
             endpoints.MapPost("api/blogs/{blogId}/contributors", async (int blogId, ContributorAdd contributor)
@@ -33,6 +33,20 @@ namespace Thoughtful.Api.Features.Blogs.Endpoints
                 .Produces(204)
                 .Produces(500);
 
+            endpoints.MapPut("api/blogs/{blogId}/owner", async (int blogId, OwnerUpdate newOwner) 
+                => await UpdateOwner(blogId, newOwner))
+                .WithName("UpdateBlogOwner")
+                .WithDisplayName("Blogs")
+                .Produces(204)
+                .Produces(500);
+
+            endpoints.MapPut("api/blogs/{blogId}", async (int blogId, BlogInfo info) 
+                => await UpdateInfo(blogId, info))
+                .WithName("UpdateBlogInfo")
+                .WithDisplayName("Blogs")
+                .Produces(204)
+                .Produces(500);
+
             return endpoints;
         }
 
@@ -40,7 +54,7 @@ namespace Thoughtful.Api.Features.Blogs.Endpoints
         {
             var command = new CreateBlog { NewBlog = blog};
             var result = await _mediator.Send(command);
-            return Results.Ok(result);
+            return Results.CreatedAtRoute("GetBlogById", new { Id = result.Id }, result);
         }
 
         private async Task<IResult> AddBlogContributor(int blogId, ContributorAdd contributor)
@@ -57,7 +71,23 @@ namespace Thoughtful.Api.Features.Blogs.Endpoints
             return Results.NoContent();
         }
 
+        private async Task<IResult> UpdateOwner(int blogId, OwnerUpdate newOwner)
+        {
+            var command = new UpdateBlogOwner { BlogId = blogId, OnwerId = newOwner.OwnerId};
+            await _mediator.Send(command);
+            return Results.NoContent();
+        }
+
+        private async Task<IResult> UpdateInfo(int blogId, BlogInfo info)
+        {
+            var command = new UpdateBlogInfo { BlogId = blogId, Name = info.Name, Description = info.Description };
+            await _mediator.Send(command);
+            return Results.NoContent();
+        }
+
         public record BlogCreate(string Name, string Description, int AuhtorId);
         public record ContributorAdd(int ContributorId);
+        public record OwnerUpdate(int OwnerId);
+        public record BlogInfo(string Name, string Description);
     }  
 }

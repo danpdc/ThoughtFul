@@ -23,7 +23,7 @@ namespace Thoughtful.Api.Features.AuthorFeature
                 .WithName("CreateAuthor")
                 .WithDisplayName("Authors")
                 .WithTags("Authors")
-                .Produces<AuthorGetDto>()
+                .Produces<AuthorGetDto>(201)
                 .Produces(500);
 
             endpoints.MapGet("api/authors/{id}", async (int id) => await GetAuthorById(id))
@@ -76,7 +76,7 @@ namespace Thoughtful.Api.Features.AuthorFeature
         {
             var command = new CreateAuthorCommand { Author = authorDto };
             var result = await _mediator.Send(command);
-            return Results.Ok(result);
+            return Results.CreatedAtRoute("GetAuthorById", new { Id = result.Id}, result);
         }
 
         private async Task<IResult> GetAuthorById(int id)
