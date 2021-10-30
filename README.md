@@ -18,6 +18,7 @@ Running the API is very easy:
 1. Provide a connection string in the `appsettings.json` file
 2. Run `update-database` in the Package Manager Console or with the .NET Core CLI (make sure you target the Thoightful.Dal project, as all migrations are there)
 3. Run the API and play with it
+4. You'll need the .NET 6 RC2 SDK to run the app. My suggestion is to run it in Visual Studio 2022. 
 
 ## Further resources
 This project was built during 4 different live coding sessions on Youtube.
