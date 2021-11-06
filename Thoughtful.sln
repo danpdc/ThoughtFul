@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31808.319
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thoughtful.Domain", "Thoughtful.Domain\Thoughtful.Domain.csproj", "{C7218F36-4B32-4C76-8474-C56D2D263934}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thoughtful.Domain", "Thoughtful.Domain\Thoughtful.Domain.csproj", "{C7218F36-4B32-4C76-8474-C56D2D263934}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thoughtful.Dal", "Thoughtful.Dal\Thoughtful.Dal.csproj", "{DFF38185-1237-4103-B4A5-2E0DA0BFC325}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thoughtful.Dal", "Thoughtful.Dal\Thoughtful.Dal.csproj", "{DFF38185-1237-4103-B4A5-2E0DA0BFC325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thoughtful.Api", "Thoughtful.Api\Thoughtful.Api.csproj", "{EBDA5F0E-7A60-40E1-8C4B-8402B50656E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thoughtful.Api", "Thoughtful.Api\Thoughtful.Api.csproj", "{EBDA5F0E-7A60-40E1-8C4B-8402B50656E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

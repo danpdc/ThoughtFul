@@ -1,46 +1,51 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Codewrinkles.MinimalApi.SmartModules;
 using Thoughtful.Api.Features.Author.Commands;
 using Thoughtful.Api.Features.Author.Queries;
-using Thoughtful.Dal;
-using Thoughtful.Domain.Model;
 
 namespace Thoughtful.Api.Features.AuthorFeature
 {
     public class AuthorModule : IModule
     {
-        private IMediator _mediator;
-        private IMapper _mapper;
-        public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
+        private readonly ILogger<AuthorModule> _logger;
+        public AuthorModule(ILogger<AuthorModule> logger)
         {
-            endpoints.MapGet("/api/authors", async () => await GetAllAuthors())
+            _logger = logger;
+        }
+        public IEndpointRouteBuilder MapEndpointDefinitions(IEndpointRouteBuilder endpoints)
+        {
+            endpoints.MapGet("/api/authors", async (IMediator mediator) 
+                => await GetAllAuthors(mediator))
                 .WithName("GetAllAuthors")
                 .WithDisplayName("Authors")
                 .WithTags("Authors")
                 .Produces<List<AuthorGetDto>>()
                 .Produces(500);
 
-            endpoints.MapPost("/api/authors", async (AuthorDto authorDto) => await CreateAuthor(authorDto))
+            endpoints.MapPost("GET /api/authors", async (AuthorDto authorDto, IMediator mediator) 
+                => await CreateAuthor(authorDto, mediator))
                 .WithName("CreateAuthor")
                 .WithDisplayName("Authors")
                 .WithTags("Authors")
                 .Produces<AuthorGetDto>(201)
                 .Produces(500);
 
-            endpoints.MapGet("api/authors/{id}", async (int id) => await GetAuthorById(id))
+            endpoints.MapGet("api/authors/{id}", async (int id, IMediator mediator) 
+                => await GetAuthorById(id, mediator))
                 .WithName("GetAuthorById")
                 .WithDisplayName("Authors")
                 .Produces<AuthorGetDto>()
                 .Produces(404)
                 .Produces(500);
 
-            endpoints.MapPut("api/authors/{id}", async (int id, AuthorDto authorToUpdate) 
-                => await UpdateAuthor(id, authorToUpdate))
+            endpoints.MapPut("api/authors/{id}", async (int id, AuthorDto authorToUpdate, IMediator mediator) 
+                => await UpdateAuthor(id, authorToUpdate, mediator))
                 .WithName("UpdateAuthor")
                 .WithDisplayName("Authors")
                 .Produces(204)
                 .Produces(500);
 
-            endpoints.MapDelete("api/authors/{id}", async (int id) => await DeleteAuthor(id))
+            endpoints.MapDelete("api/authors/{id}", async (int id, IMediator mediator) 
+                => await DeleteAuthor(id, mediator))
                 .WithName("DeleteAuthor")
                 .WithDisplayName("Authors")
                 .Produces(204)
@@ -49,21 +54,13 @@ namespace Thoughtful.Api.Features.AuthorFeature
             return endpoints;
         }
 
-        public WebApplicationBuilder RegisterModule(WebApplicationBuilder builder)
-        {
-            var provider = builder.Services.BuildServiceProvider();
-            _mediator = provider.GetRequiredService<IMediator>();
-            _mapper = provider.GetRequiredService<IMapper>();
-            return builder;
-        }
-
         /// <summary>
         /// Gets all authors
         /// </summary>
         /// <returns></returns>
-        private async Task<IResult> GetAllAuthors()
+        private async Task<IResult> GetAllAuthors(IMediator mediator)
         {
-            var authors = await _mediator.Send(new GetAllAuthorsQuery());
+            var authors = await mediator.Send(new GetAllAuthorsQuery());
             return Results.Ok(authors);
         }
 
@@ -72,23 +69,23 @@ namespace Thoughtful.Api.Features.AuthorFeature
         /// </summary>
         /// <param name="authorDto"></param>
         /// <returns></returns>
-        private async Task<IResult> CreateAuthor(AuthorDto authorDto)
+        private async Task<IResult> CreateAuthor(AuthorDto authorDto, IMediator mediator)
         {
             var command = new CreateAuthorCommand { Author = authorDto };
-            var result = await _mediator.Send(command);
+            var result = await mediator.Send(command);
             return Results.CreatedAtRoute("GetAuthorById", new { Id = result.Id}, result);
         }
 
-        private async Task<IResult> GetAuthorById(int id)
+        private async Task<IResult> GetAuthorById(int id, IMediator mediator)
         {
-            var result = await _mediator.Send(new GetAuthorById { AuthorId = id});
+            var result = await mediator.Send(new GetAuthorById { AuthorId = id});
             if (result is null)
                 return Results.NotFound();
 
             return Results.Ok(result);
         }
 
-        private async Task<IResult> UpdateAuthor(int id, AuthorDto authorToUpdate)
+        private async Task<IResult> UpdateAuthor(int id, AuthorDto authorToUpdate, IMediator mediator)
         {
             var command = new UpdateAuthor
             {
@@ -98,14 +95,14 @@ namespace Thoughtful.Api.Features.AuthorFeature
                 Bio = authorToUpdate.Bio,
                 DateOfBirth = authorToUpdate.DateOfBirth
             };
-            await _mediator.Send(command);
+            await mediator.Send(command);
 
             return Results.NoContent();
         }
 
-        private async Task<IResult> DeleteAuthor(int id)
+        private async Task<IResult> DeleteAuthor(int id, IMediator mediator)
         {
-            await _mediator.Send(new DeleteAuthor { AuthorId = id});
+            await mediator.Send(new DeleteAuthor { AuthorId = id});
             return Results.NoContent();
         }
     }

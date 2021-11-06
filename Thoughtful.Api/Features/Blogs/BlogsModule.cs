@@ -1,24 +1,26 @@
-﻿using Thoughtful.Api.Features.Blogs.Endpoints;
+﻿using Codewrinkles.MinimalApi.SmartModules;
+using Microsoft.Extensions.Logging;
+using Thoughtful.Api.Features.Blogs.Endpoints;
 
 namespace Thoughtful.Api.Features.Blogs
 {
     public class BlogsModule : IModule
     {
-        private IMediator _mediator;
-        private IMapper _mapper;
-        public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
+        private readonly ILogger<BlogsModule> _logger;
+        private readonly BlogReadsEndpoint _blogReadsEndpoint;
+        private readonly BlogsWritesEndpoint _blogWritesEndpoint;
+        public BlogsModule(ILogger<BlogsModule> logger, BlogReadsEndpoint blogReads,
+            BlogsWritesEndpoint blogWrites)
         {
-            new BlogReadsEndpoint(_mediator).RegisterRoutes(endpoints);
-            new BlogsWritesEndpoint(_mediator).RegisterRoutes(endpoints);
-            return endpoints;
+            _logger = logger;
+            _blogReadsEndpoint = blogReads;
+            _blogWritesEndpoint = blogWrites;
         }
-
-        public WebApplicationBuilder RegisterModule(WebApplicationBuilder builder)
+        public IEndpointRouteBuilder MapEndpointDefinitions(IEndpointRouteBuilder endpoints)
         {
-            var provider = builder.Services.BuildServiceProvider();
-            _mediator = provider.GetRequiredService<IMediator>();
-            _mapper = provider.GetRequiredService<IMapper>();
-            return builder;
+            _blogReadsEndpoint.RegisterRoutes(endpoints);
+            _blogWritesEndpoint.RegisterRoutes(endpoints);
+            return endpoints;
         }
     }
 }

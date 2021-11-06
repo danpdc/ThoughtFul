@@ -1,11 +1,12 @@
+using Codewrinkles.MinimalApi.SmartModules.Extensions.WebApplicationExtensions;
 using Thoughtful.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices(builder);
-builder.RegisterModules();
+builder.Services.AddSmartModules(typeof(Program));
 
 var app = builder.Build();
 app.ConfigureApplication();
-app.MapEndpoints();
+app.UseSmartModules(typeof(Program));
 
 app.Run();

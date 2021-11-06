@@ -1,33 +1,36 @@
-﻿using Thoughtful.Api.Features.Blogs.Queries;
+﻿using Codewrinkles.MinimalApi.SmartModules;
+using Thoughtful.Api.Features.Blogs.Queries;
 using Thoughtful.Dal;
 
 namespace Thoughtful.Api.Features.Blogs.Endpoints
 {
-    public class BlogReadsEndpoint : IEndpoint
+    public class BlogReadsEndpoint : IEndpointDefinition
     {
-        private readonly IMediator _mediator;
-        public BlogReadsEndpoint(IMediator mediator)
+        private readonly ILogger<BlogReadsEndpoint> _logger;
+        public BlogReadsEndpoint(ILogger<BlogReadsEndpoint> logger)
         {
-            _mediator = mediator;
+            _logger = logger;
         }
 
         public IEndpointRouteBuilder RegisterRoutes(IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapGet("/api/blogs", async () => await GetAllBlogs())
+            endpoints.MapGet("/api/blogs", async (IMediator mediator) => await GetAllBlogs(mediator))
                 .WithDisplayName("Blogs")
                 .WithName("Get all blogs")
                 .Produces<List<Blog>>()
                 .Produces(500);
+            _logger.LogInformation("Added endpoint: /api/blogs");
 
-            endpoints.MapGet("/api/blogs/{id}", async (int id) => await GetBlogById(id))
+            endpoints.MapGet("/api/blogs/{id}", async (IMediator mediator, int id) 
+                => await GetBlogById(id, mediator))
                 .WithName("GetBlogById")
                 .WithDisplayName("Blogs")
                 .Produces<Blog>()
                 .Produces(404)
                 .Produces(500);
 
-            endpoints.MapGet("api/blogs/{blogId}/contributors", async (int blogId)
-                => await GetBlogContribtuors(blogId))
+            endpoints.MapGet("api/blogs/{blogId}/contributors", async (IMediator mediator, int blogId)
+                => await GetBlogContribtuors(blogId, mediator))
                 .WithName("GetBlogContributors")
                 .WithDisplayName("Blogs")
                 .Produces<List<Contributor>>()
@@ -35,29 +38,29 @@ namespace Thoughtful.Api.Features.Blogs.Endpoints
             return endpoints;
         }
 
-        private async Task<IResult> GetAllBlogs()
+        private async Task<IResult> GetAllBlogs(IMediator mediator)
         {
-            var result = await _mediator.Send(new GetAllBlogs());
+            var result = await mediator.Send(new GetAllBlogs());
             return Results.Ok(result);
         }
 
-        private async Task<IResult> GetBlogById(int id)
+        private async Task<IResult> GetBlogById(int id, IMediator mediator)
         {
-            var result = await _mediator.Send(new GetBlogById { BlogId = id});
+            var result = await mediator.Send(new GetBlogById { BlogId = id});
             if (result is null)
                 return Results.NotFound();
 
             return Results.Ok(result);
         }
 
-        private async Task<IResult> GetBlogContribtuors(int blogId)
+        private async Task<IResult> GetBlogContribtuors(int blogId, IMediator mediator)
         {
             var query = new Thoughtful.Api.Features.Blogs.Queries.GetBlogContributors
             {
                 BlogId = blogId
             };
 
-            var result = await _mediator.Send(query);
+            var result = await mediator.Send(query);
             return Results.Ok(result);
         }
 
