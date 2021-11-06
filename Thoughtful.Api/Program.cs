@@ -7,6 +7,6 @@ builder.Services.AddSmartModules(typeof(Program));
 
 var app = builder.Build();
 app.ConfigureApplication();
-app.UseSmartModules(typeof(Program));
+app.UseSmartModules();
 
 app.Run();
