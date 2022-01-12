@@ -1,4 +1,5 @@
 ﻿using Codewrinkles.MinimalApi.SmartModules;
+using Codewrinkles.MinimalApi.SmartModules.Extensions.SmartEndpointsExtensions;
 using Thoughtful.Api.Features.Blogs.Queries;
 using Thoughtful.Dal;
 
@@ -14,14 +15,13 @@ namespace Thoughtful.Api.Features.Blogs.Endpoints
 
         public IEndpointRouteBuilder RegisterRoutes(IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapGet("/api/blogs", async (IMediator mediator) => await GetAllBlogs(mediator))
+            endpoints.MapSmartGet("/api/blogs", async (IMediator mediator) => await GetAllBlogs(mediator))
                 .WithDisplayName("Blogs")
-                .WithName("Get all blogs")
-                .Produces<List<Blog>>()
-                .Produces(500);
+                .WithName("GetBlogs")
+                .Produces<List<Blog>>();
             _logger.LogInformation("Added endpoint: /api/blogs");
 
-            endpoints.MapGet("/api/blogs/{id}", async (IMediator mediator, int id) 
+            endpoints.MapSmartGet("/api/blogs/{id}", async (IMediator mediator, int id) 
                 => await GetBlogById(id, mediator))
                 .WithName("GetBlogById")
                 .WithDisplayName("Blogs")
@@ -29,7 +29,7 @@ namespace Thoughtful.Api.Features.Blogs.Endpoints
                 .Produces(404)
                 .Produces(500);
 
-            endpoints.MapGet("api/blogs/{blogId}/contributors", async (IMediator mediator, int blogId)
+            endpoints.MapSmartGet("api/blogs/{blogId}/contributors", async (IMediator mediator, int blogId)
                 => await GetBlogContribtuors(blogId, mediator))
                 .WithName("GetBlogContributors")
                 .WithDisplayName("Blogs")

@@ -4,7 +4,7 @@ using Thoughtful.Api.Features.Blogs.Endpoints;
 
 namespace Thoughtful.Api.Features.Blogs
 {
-    public class BlogsModule : IModule
+    public class BlogsModule : SmartModule
     {
         private readonly ILogger<BlogsModule> _logger;
         private readonly BlogReadsEndpoint _blogReadsEndpoint;
@@ -16,7 +16,7 @@ namespace Thoughtful.Api.Features.Blogs
             _blogReadsEndpoint = blogReads;
             _blogWritesEndpoint = blogWrites;
         }
-        public IEndpointRouteBuilder MapEndpointDefinitions(IEndpointRouteBuilder endpoints)
+        public override IEndpointRouteBuilder MapEndpointDefinitions(IEndpointRouteBuilder endpoints)
         {
             _blogReadsEndpoint.RegisterRoutes(endpoints);
             _blogWritesEndpoint.RegisterRoutes(endpoints);

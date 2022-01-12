@@ -1,4 +1,5 @@
 ﻿using Codewrinkles.MinimalApi.SmartModules;
+using Codewrinkles.MinimalApi.SmartModules.Extensions.SmartEndpointsExtensions;
 using Thoughtful.Api.Features.Blogs.Commands;
 
 namespace Thoughtful.Api.Features.Blogs.Endpoints
@@ -13,14 +14,14 @@ namespace Thoughtful.Api.Features.Blogs.Endpoints
 
         public IEndpointRouteBuilder RegisterRoutes(IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapPost("/api/blogs", async (BlogCreate dto, IMediator mediator) 
+            endpoints.MapSmartPost("/api/blogs", async (BlogCreate dto, IMediator mediator) 
                 => await CreateBlog(dto, mediator))
                 .WithName("Createblog")
                 .WithDisplayName("Blogs")
                 .Produces<BlogCreate>(201)
                 .Produces(500);
 
-            endpoints.MapPost("api/blogs/{blogId}/contributors", async (int blogId, ContributorAdd contributor, 
+            endpoints.MapSmartPost("api/blogs/{blogId}/contributors", async (int blogId, ContributorAdd contributor, 
                 IMediator mediator)
                 => await AddBlogContributor(blogId, contributor, mediator))
                 .WithName("AddContributor")
@@ -28,7 +29,7 @@ namespace Thoughtful.Api.Features.Blogs.Endpoints
                 .Produces(204)
                 .Produces(500);
 
-            endpoints.MapDelete("api/blogs/{blogdId}/contributors/{contributorId}",  async (int blogId, int contributorId, 
+            endpoints.MapSmartDelete("api/blogs/{blogdId}/contributors/{contributorId}",  async (int blogId, int contributorId, 
                 IMediator mediator) 
                 => await RemoveContributor(blogId, contributorId, mediator))
                 .WithName("RemoveContributor")
@@ -36,7 +37,7 @@ namespace Thoughtful.Api.Features.Blogs.Endpoints
                 .Produces(204)
                 .Produces(500);
 
-            endpoints.MapPut("api/blogs/{blogId}/owner", async (int blogId, OwnerUpdate newOwner, 
+            endpoints.MapSmartPut("api/blogs/{blogId}/owner", async (int blogId, OwnerUpdate newOwner, 
                 IMediator mediator) 
                 => await UpdateOwner(blogId, newOwner, mediator))
                 .WithName("UpdateBlogOwner")
@@ -44,7 +45,7 @@ namespace Thoughtful.Api.Features.Blogs.Endpoints
                 .Produces(204)
                 .Produces(500);
 
-            endpoints.MapPut("api/blogs/{blogId}", async (int blogId, BlogInfo info, IMediator mediator) 
+            endpoints.MapSmartPut("api/blogs/{blogId}", async (int blogId, BlogInfo info, IMediator mediator) 
                 => await UpdateInfo(blogId, info, mediator))
                 .WithName("UpdateBlogInfo")
                 .WithDisplayName("Blogs")

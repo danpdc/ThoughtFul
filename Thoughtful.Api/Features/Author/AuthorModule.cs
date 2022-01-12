@@ -1,19 +1,20 @@
 ﻿using Codewrinkles.MinimalApi.SmartModules;
+using Codewrinkles.MinimalApi.SmartModules.Extensions.SmartEndpointsExtensions;
 using Thoughtful.Api.Features.Author.Commands;
 using Thoughtful.Api.Features.Author.Queries;
 
 namespace Thoughtful.Api.Features.AuthorFeature
 {
-    public class AuthorModule : IModule
+    public class AuthorModule : SmartModule
     {
         private readonly ILogger<AuthorModule> _logger;
         public AuthorModule(ILogger<AuthorModule> logger)
         {
             _logger = logger;
         }
-        public IEndpointRouteBuilder MapEndpointDefinitions(IEndpointRouteBuilder endpoints)
+        public override IEndpointRouteBuilder MapEndpointDefinitions(IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapGet("/api/authors", async (IMediator mediator) 
+            endpoints.MapSmartGet("/api/authors", async (IMediator mediator) 
                 => await GetAllAuthors(mediator))
                 .WithName("GetAllAuthors")
                 .WithDisplayName("Authors")
@@ -21,7 +22,7 @@ namespace Thoughtful.Api.Features.AuthorFeature
                 .Produces<List<AuthorGetDto>>()
                 .Produces(500);
 
-            endpoints.MapPost("GET /api/authors", async (AuthorDto authorDto, IMediator mediator) 
+            endpoints.MapSmartPost("GET /api/authors", async (AuthorDto authorDto, IMediator mediator) 
                 => await CreateAuthor(authorDto, mediator))
                 .WithName("CreateAuthor")
                 .WithDisplayName("Authors")
@@ -29,7 +30,7 @@ namespace Thoughtful.Api.Features.AuthorFeature
                 .Produces<AuthorGetDto>(201)
                 .Produces(500);
 
-            endpoints.MapGet("api/authors/{id}", async (int id, IMediator mediator) 
+            endpoints.MapSmartGet("api/authors/{id}", async (int id, IMediator mediator) 
                 => await GetAuthorById(id, mediator))
                 .WithName("GetAuthorById")
                 .WithDisplayName("Authors")
@@ -37,14 +38,14 @@ namespace Thoughtful.Api.Features.AuthorFeature
                 .Produces(404)
                 .Produces(500);
 
-            endpoints.MapPut("api/authors/{id}", async (int id, AuthorDto authorToUpdate, IMediator mediator) 
+            endpoints.MapSmartPut("api/authors/{id}", async (int id, AuthorDto authorToUpdate, IMediator mediator) 
                 => await UpdateAuthor(id, authorToUpdate, mediator))
                 .WithName("UpdateAuthor")
                 .WithDisplayName("Authors")
                 .Produces(204)
                 .Produces(500);
 
-            endpoints.MapDelete("api/authors/{id}", async (int id, IMediator mediator) 
+            endpoints.MapSmartDelete("api/authors/{id}", async (int id, IMediator mediator) 
                 => await DeleteAuthor(id, mediator))
                 .WithName("DeleteAuthor")
                 .WithDisplayName("Authors")
